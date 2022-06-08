@@ -1,0 +1,22 @@
+body{
+    background-color: antiquewhite;
+}
+
+
+div{
+    display:flex;
+    justify-content: center;    
+}
+
+.buttons{
+    justify-content: center;
+}
+
+.btn{
+    margin: 20px;
+}
+
+h1{
+    text-align: center;
+}
+

@@ -104,10 +104,12 @@ function startGame() {
     requestAnimationFrame(startGame)
   }
   isStopped = false
+  document.querySelector('.start').removeEventListener('click', startGame)
 }
 
 
 function stopGame() {
+  document.querySelector('.start').addEventListener('click', startGame)
   isStopped = true
 }
 
