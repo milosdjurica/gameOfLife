@@ -1,9 +1,19 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
-let startStop = document.querySelector('.startStop')
 
-startStop.addEventListener('click', playGame)
-document.querySelector('.step').addEventListener('click', step)
+let startStopButton = document.querySelector('.start-stop')
+let stepButton = document.querySelector('.step')
+let clearButton = document.querySelector('.clear')
+let speedButton = document.querySelector('.speed')
+let slowButton = document.querySelector('.slow')
+
+
+startStopButton.addEventListener('click', playGame)
+stepButton.addEventListener('click', step)
+clearButton.addEventListener('click', handleClearRandomizeButton)
+speedButton.addEventListener('click', speedUp)
+slowButton.addEventListener('click', slowDown)
+
 
 let resolution = 10
 canvas.width = 1000
@@ -12,20 +22,30 @@ canvas.height = 500
 let cols = canvas.width / resolution
 let rows = canvas.height / resolution
 
-let grid = createGrid()
+
+
+
+let interval
+let speed = 1000
+let isPlaying = false
+let isCleared = false
+
+
+
+let grid = createRandomizedGrid()
 draw(grid)
 
-let isPlaying = false
-let interval
-let speed = 100
 
 
-function createGrid() {
+
+function createRandomizedGrid() {
   // fill da bi moglo da bude iterable
   return new Array(cols).fill(null)
     .map(() => new Array(rows).fill(0)
       .map(() => Math.floor(Math.random() * 2)))
 }
+
+
 
 
 function draw(grid) {
@@ -97,17 +117,17 @@ function countNeighbours(col, row, grid) {
 
 function playGame() {
   if (isPlaying) {
-    interval = clearInterval(interval)
+    clearInterval(interval)
     isPlaying = false
-    startStop.innerText = "Start"
-    startStop.classList.add("btn-success")
-    startStop.classList.remove("btn-danger")
-  }else{
+    startStopButton.innerText = "Start"
+    startStopButton.classList.add("btn-success")
+    startStopButton.classList.remove("btn-danger")
+  } else {
     interval = setInterval(step, speed)
     isPlaying = true
-    startStop.innerText = "Stop"
-    startStop.classList.add("btn-danger")
-    startStop.classList.remove("btn-primary")
+    startStopButton.innerText = "Stop"
+    startStopButton.classList.add("btn-danger")
+    startStopButton.classList.remove("btn-success")
   }
 }
 
@@ -118,6 +138,50 @@ function step() {
   draw(grid)
 }
 
+
+
+function speedUp(){
+  speed = speed/2
+  clearInterval(interval)
+  if(isPlaying){
+    interval = setInterval(step, speed)
+  }
+}
+
+
+function slowDown(){
+  speed = speed*2
+  clearInterval(interval)
+  if(isPlaying){
+    interval = setInterval(step, speed)
+  }
+}
+
+
+
+
+function handleClearRandomizeButton() {
+  if (!isCleared) {
+    grid = new Array(cols).fill(null)
+      .map(() => new Array(rows).fill(0))
+
+    isCleared = true
+    draw(grid)
+
+    clearButton.innerText = "Randomize"
+    clearButton.classList.add("btn-light")
+    clearButton.classList.remove("btn-dark")
+
+  } else {
+    grid = createRandomizedGrid()
+    isCleared = false
+    draw(grid)
+
+    clearButton.innerText = "Clear"
+    clearButton.classList.add("btn-dark")
+    clearButton.classList.remove("btn-light")
+  }
+}
 
 
 
