@@ -8,6 +8,13 @@ div{
     justify-content: center;    
 }
 
+
+canvas{
+    margin:0;
+    border: 10px solid red;
+}
+
+
 .buttons{
     justify-content: center;
 }

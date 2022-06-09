@@ -1,13 +1,13 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
+let startStop = document.querySelector('.startStop')
 
-document.querySelector('.start').addEventListener('click', startGame)
-document.querySelector('.stop').addEventListener('click', stopGame)
+startStop.addEventListener('click', playGame)
 document.querySelector('.step').addEventListener('click', step)
 
 let resolution = 10
-canvas.width = 400
-canvas.height = 400
+canvas.width = 1000
+canvas.height = 500
 
 let cols = canvas.width / resolution
 let rows = canvas.height / resolution
@@ -15,7 +15,9 @@ let rows = canvas.height / resolution
 let grid = createGrid()
 draw(grid)
 
-let isStopped = false
+let isPlaying = false
+let interval
+let speed = 100
 
 
 function createGrid() {
@@ -90,30 +92,31 @@ function countNeighbours(col, row, grid) {
 }
 
 
+
+
+
+function playGame() {
+  if (isPlaying) {
+    interval = clearInterval(interval)
+    isPlaying = false
+    startStop.innerText = "Start"
+    startStop.classList.add("btn-success")
+    startStop.classList.remove("btn-danger")
+  }else{
+    interval = setInterval(step, speed)
+    isPlaying = true
+    startStop.innerText = "Stop"
+    startStop.classList.add("btn-danger")
+    startStop.classList.remove("btn-primary")
+  }
+}
+
+
+
 function step() {
   grid = nextGen(grid)
   draw(grid)
 }
-
-
-
-function startGame() {
-  if (!isStopped) {
-    grid = nextGen(grid)
-    draw(grid)
-    requestAnimationFrame(startGame)
-  }
-  isStopped = false
-  document.querySelector('.start').removeEventListener('click', startGame)
-}
-
-
-function stopGame() {
-  document.querySelector('.start').addEventListener('click', startGame)
-  isStopped = true
-}
-
-
 
 
 
