@@ -6,6 +6,8 @@ let stepButton = document.querySelector('.step')
 let clearButton = document.querySelector('.clear')
 let speedButton = document.querySelector('.speed')
 let slowButton = document.querySelector('.slow')
+let saveButton = document.querySelector('.save')
+let loadButton = document.querySelector('.load')
 
 
 startStopButton.addEventListener('click', playGame)
@@ -13,10 +15,12 @@ stepButton.addEventListener('click', step)
 clearButton.addEventListener('click', handleClearRandomizeButton)
 speedButton.addEventListener('click', speedUp)
 slowButton.addEventListener('click', slowDown)
+saveButton.addEventListener('click', savePattern)
+loadButton.addEventListener('click', loadPattern)
 
 
 let resolution = 10
-canvas.width = 1000
+canvas.width = 500
 canvas.height = 500
 
 let cols = canvas.width / resolution
@@ -38,8 +42,38 @@ draw(grid)
 
 
 
+function savePattern() {
+  localStorage.setItem('pattern', grid);
+}
+
+
+
+
+function loadPattern() {
+  let saved = localStorage.getItem('pattern');
+  arr = Array.from(saved.split(','))
+  let arrIndex=0
+
+  grid = new Array(cols).fill(null)
+  .map(() => new Array(rows).fill(0))
+
+  for(let i=0; i<cols; i++){
+    for(let j=0; j<rows; j++){
+      grid[i][j] = Number(arr[arrIndex])
+      arrIndex++
+    }
+  }
+
+  // stop game to see loaded grid, and reset start/stop button
+  draw(grid)
+  isPlaying = true
+  playGame()
+}
+
+
+
 function createRandomizedGrid() {
-  // fill da bi moglo da bude iterable
+  // fill null because otherwise cant iterate over array
   return new Array(cols).fill(null)
     .map(() => new Array(rows).fill(0)
       .map(() => Math.floor(Math.random() * 2)))
@@ -49,8 +83,8 @@ function createRandomizedGrid() {
 
 
 function draw(grid) {
-  for (let col = 0; col < grid.length; col++) {
-    for (let row = 0; row < grid[col].length; row++) {
+  for (let col = 0; col < cols; col++) {
+    for (let row = 0; row < rows; row++) {
       let cell = grid[col][row]
 
       ctx.beginPath()
@@ -83,7 +117,7 @@ function nextGen(grid) {
       } else if (cell === 0 && numNeighbour === 3) {
         copy[col][row] = 1
       }
-      // no need for else because it stays same
+      // otherwise grid doesnt change
     }
   }
   return copy
@@ -106,7 +140,7 @@ function countNeighbours(col, row, grid) {
       }
     }
   }
-  // we counted cell value when we were counting neighbours 10 lines of code above
+  // removing cell from its neighbours count
   numNeighbour -= grid[col][row]
   return numNeighbour
 }
@@ -140,19 +174,19 @@ function step() {
 
 
 
-function speedUp(){
-  speed = speed/2
+function speedUp() {
+  speed = speed / 2
   clearInterval(interval)
-  if(isPlaying){
+  if (isPlaying) {
     interval = setInterval(step, speed)
   }
 }
 
 
-function slowDown(){
-  speed = speed*2
+function slowDown() {
+  speed = speed * 2
   clearInterval(interval)
-  if(isPlaying){
+  if (isPlaying) {
     interval = setInterval(step, speed)
   }
 }
