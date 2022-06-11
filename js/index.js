@@ -52,13 +52,13 @@ function savePattern() {
 function loadPattern() {
   let saved = localStorage.getItem('pattern');
   arr = Array.from(saved.split(','))
-  let arrIndex=0
+  let arrIndex = 0
 
   grid = new Array(cols).fill(null)
-  .map(() => new Array(rows).fill(0))
+    .map(() => new Array(rows).fill(0))
 
-  for(let i=0; i<cols; i++){
-    for(let j=0; j<rows; j++){
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
       grid[i][j] = Number(arr[arrIndex])
       arrIndex++
     }
@@ -66,6 +66,14 @@ function loadPattern() {
 
   // stop game to see loaded grid, and reset start/stop button
   draw(grid)
+
+  if (isCleared) {
+    isCleared = false
+    clearButton.innerText = "Clear"
+    clearButton.classList.add("btn-dark")
+    clearButton.classList.remove("btn-light")
+  }
+
   isPlaying = true
   playGame()
 }
