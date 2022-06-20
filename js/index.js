@@ -20,7 +20,7 @@ loadButton.addEventListener('click', loadPattern)
 
 
 let resolution = 10
-canvas.width = 500
+canvas.width = 700
 canvas.height = 500
 
 let cols = canvas.width / resolution
